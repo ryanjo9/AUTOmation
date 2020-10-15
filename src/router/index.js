@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Display from '../views/Display.vue'
+import Add from '../views/Add.vue'
 
 Vue.use(VueRouter)
 
@@ -23,6 +24,11 @@ const routes = [
     path: '/display',
     name: 'Display',
     component: Display
+  },
+  {
+    path: '/add',
+    name: 'Add',
+    component: Add
   }
   
 ]
