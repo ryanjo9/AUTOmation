@@ -4,8 +4,8 @@
   </div>
   <div v-else-if="step==1">
     <CarHistoryInput v-on:cancel="cancel" v-on:CarHistoryInputFinish="historyInputFinish"/>
-    <div v-if="saved">
-      <p>Save successfully</p>
+    <div v-if="err">
+      <p>Something went wrong. Please try again</p>
     </div>
   </div>
 </template>
@@ -24,7 +24,8 @@ export default {
   data() {
     return {
       step: 0,
-      carInfo: {}
+      carInfo: {},
+      err: null
     }
   },
   methods: {
@@ -40,7 +41,14 @@ export default {
       })
 
       // make call to save info
-      this.$router.push('/')
+      const response = await this.$store.dispatch('saveCar', this.carInfo)
+
+      if (response != '') {
+        this.err = response
+        console.log('Error: ', response)
+      } else {
+        this.$router.push('/')
+      }
     },
     cancel() {
       this.$router.push('/')

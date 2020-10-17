@@ -41,7 +41,7 @@
         <label>Coolant Flush</label>
       </div>
     </form>
-    <button type="submit" class="btn btn-outline-warning" @click="next">Next</button> 
+    <button type="submit" class="btn btn-outline-warning" @click="next">Submit</button> 
     <button type="submit" v-on:click="cancel" class="btn btn-outline-secondary">Cancel</button>
     <!-- <br/>
     <br/>

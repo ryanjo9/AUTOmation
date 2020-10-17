@@ -1,6 +1,6 @@
 <template>
   <div class="CarTypeInput">
-    <h2>Tell us about your car</h2>
+    <h2>{{ user.name }}, Tell us about your car</h2>
     <p>Select your car's year, make, model and enter its current mileage</p>
     <br/>
     <form @submit.prevent.stop="search" class="pure-form pure-form-aligned">
@@ -45,6 +45,9 @@ export default {
     },
     models(){
       return this.$store.state.models
+    },
+    user() {
+      return this.$store.state.user;
     }
   },
   data() {
@@ -75,6 +78,7 @@ export default {
   },
   async created() {
     this.err = await this.$store.dispatch('getMakes');
+    await this.$store.dispatch("getUser");
   }
 }
 </script>

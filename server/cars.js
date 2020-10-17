@@ -1,16 +1,16 @@
 const mongoose = require('mongoose');
 const express = require("express");
 const router = express.Router();
-//const auth = require("./auth.js");
+const auth = require("./auth.js");
 
-//const users = require("./users.js");
-//const User = users.model;
+const users = require("./users.js");
+const User = users.model;
 
 const carSchema = new mongoose.Schema({
-  /*user: {
+  user: {
     type: mongoose.Schema.ObjectId,
     ref: 'User'
-  },*/
+  },
   year: String,
   make: String,
   model: String,
@@ -29,22 +29,22 @@ const carSchema = new mongoose.Schema({
 
 const Car = mongoose.model('Car', carSchema);
 
-router.post("/add", /*auth.verifyToken, User.verify, */async (req, res) => {
-
-  const car = new Car({
-    //user: req.user,
-    year: req.body.year,
-    make: req.body.make,
-    model: req.body.model,
-    mileage: req.body.mileage,
-    averageMPY: req.body.averageMPY,
-    oil: req.body.oil,
-    tire: req.body.tire,
-    engine: req.body.engine,
-    transmission: req.body.transmission,
-    coolant: req.body.coolant
-  });
+router.post('/', auth.verifyToken, User.verify, async (req, res) => {
   try {
+    const car = new Car({
+      user: req.user,
+      year: req.body.year,
+      make: req.body.make,
+      model: req.body.model,
+      mileage: req.body.mileage,
+      averageMPY: req.body.averageMPY,
+      oil: req.body.oil,
+      tire: req.body.tire,
+      engine: req.body.engine,
+      transmission: req.body.transmission,
+      coolant: req.body.coolant
+    });
+
     await car.save();
     return res.sendStatus(200);
   } catch (error) {
@@ -70,19 +70,20 @@ router.get("/display/:carid", auth.verifyToken, User.verify, async (req, res) =>
 });*/
 
 // get one photos
-router.get("/car/:carid", async (req, res) => {
-  try {
-    let cars = [];
-    let car = await car.findOne({
-      _id: req.params.id
-    }).populate('user');
-    cars.push(car);
-    return res.send(car);
-  } catch (error) {
-    console.log(error);
-    return res.sendStatus(500);
-  }
-})
+// router.get("/car/:carid", async (req, res) => {
+//   try {
+//     let cars = [];
+//     let car = await car.findOne({
+//       _id: req.params.id
+//     }).populate('user');
+//     cars.push(car);
+//     return res.send(car);
+//   } catch (error) {
+//     console.log(error);
+//     return res.sendStatus(500);
+//   }
+// })
+
 module.exports = {
   model: Car,
   routes: router,
