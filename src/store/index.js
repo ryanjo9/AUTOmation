@@ -10,7 +10,9 @@ export default new Vuex.Store({
   state: {
     user: null,
     makes: [],
-    models: []
+    models: [],
+    cars: [],
+    car: null
   },
   mutations: {
     setUser(state, user) {
@@ -21,6 +23,12 @@ export default new Vuex.Store({
     },
     setModels(state, models) {
       state.models = models;
+    },
+    setCars(state, cars) {
+      state.cars = cars;
+    },
+    setCar(state, car) {
+      state.car = car;
     },
   },
   actions: {
@@ -94,6 +102,24 @@ export default new Vuex.Store({
         let response = await axios.post("/api/cars", data);
         console.log('response: ', response)
         // context.commit('setCar', response.data);
+        return '';
+      } catch (error) {
+        return error.message;
+      }
+    },
+    async getCars(context) {
+      try {
+        let response = await axios.get("/api/cars");
+        context.commit('setCars', response.data);
+        return '';
+      } catch (error) {
+        return error.message;
+      }
+    },
+    async getCar(context, carId) {
+      try {
+        let response = await axios.get(`/api/cars/${carId}`);
+        context.commit('setCar', response.data);
         return '';
       } catch (error) {
         return error.message;

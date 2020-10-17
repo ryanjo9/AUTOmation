@@ -1,8 +1,9 @@
 <template>
   <div class="Display">
+    <p v-if='car'>{{ car.make }} {{ car.model }}</p>
     <div class="box">
       <ul>
-        <li v-for="skill in skills" v-bind:key=skill>
+        <li v-for="skill in skills" v-bind:key='skill.color'>
           <div class="lang">{{skill.lang}}</div>
           <div class="bar">
             <div class="progress" v-bind:style = "{'background':skill.color, 'width':skill.percent+'%'}"></div>
@@ -24,6 +25,15 @@ export default {
       model: 'Camry',
       mileage: 25555
     }
+  },
+  computed: {
+    car() {
+      return this.$store.state.car;
+    }
+  },
+  async created() {
+    await this.$store.dispatch('getCar', this.$route.params.id)
+    console.log('car: ', this.$store.state.car)
   },
 //   computed: {
 //     oilChange() {

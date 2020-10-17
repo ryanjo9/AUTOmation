@@ -32,3 +32,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ```
 node server.js
 ```
+
+### Running Locally
+The app and server are separate processes. In one terminal run `node server/server.js`, in another run `npm run serve`

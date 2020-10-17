@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const auth = require("./auth.js");
+const auth = require('./auth.js');
 
-const users = require("./users.js");
+const users = require('./users.js');
 const User = users.model;
 
 const carSchema = new mongoose.Schema({
@@ -52,37 +52,35 @@ router.post('/', auth.verifyToken, User.verify, async (req, res) => {
     return res.sendStatus(500);
   }
 });
-/*
-// get my photos
-router.get("/display/:carid", auth.verifyToken, User.verify, async (req, res) => {
-  // return photos
+
+// get cars
+router.get('/', auth.verifyToken, User.verify, async (req, res) => {
+  // return cars
   try {
-    let photos = await Photo.find({
+    let cars = await Car.find({
       user: req.user
     }).sort({
       created: -1
     });
-    return res.send(photos);
+    return res.send(cars);
   } catch (error) {
     console.log(error);
     return res.sendStatus(500);
   }
-});*/
+});
 
-// get one photos
-// router.get("/car/:carid", async (req, res) => {
-//   try {
-//     let cars = [];
-//     let car = await car.findOne({
-//       _id: req.params.id
-//     }).populate('user');
-//     cars.push(car);
-//     return res.send(car);
-//   } catch (error) {
-//     console.log(error);
-//     return res.sendStatus(500);
-//   }
-// })
+// get one car
+router.get('/:carId', auth.verifyToken, User.verify, async (req, res) => {
+  try {
+    let car = await Car.findOne({
+      _id: req.params.carId
+    });
+    return res.send(car);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+})
 
 module.exports = {
   model: Car,

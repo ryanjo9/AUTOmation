@@ -4,7 +4,11 @@
     <div v-if="user">
       <h1>Hello {{user.name}}</h1>
       <a href="#" @click="logout">Logout</a>
-      <img alt="Vue logo" src="../assets/logo.png">
+      <ul>
+        <li v-for="car in cars" v-bind:key='car._id'>
+          <router-link :to="{ name: 'Display', params: {id: car._id} }">{{ car.year }} {{ car.make }} {{ car.model }}</router-link>
+        </li>
+      </ul>
     </div>
     <div v-else>
     <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
@@ -24,10 +28,14 @@ export default {
   computed: {
     user() {
       return this.$store.state.user;
+    }, 
+    cars() {
+      return this.$store.state.cars;
     }
   },
   async created() {
     await this.$store.dispatch("getUser");
+    await this.$store.dispatch('getCars')
   },
   methods: {
     async logout() {
