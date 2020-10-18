@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
 const express = require('express');
+const moment = require('moment');
 const router = express.Router();
 const auth = require('./auth.js');
 
 const users = require('./users.js');
 const User = users.model;
+
+const { intervals } = require('./constants')
 
 const carSchema = new mongoose.Schema({
   user: {
@@ -29,6 +32,44 @@ const carSchema = new mongoose.Schema({
 
 const Car = mongoose.model('Car', carSchema);
 
+
+//--------HELPER FUNCIONS--------//
+/**
+ * Returns the mileage the service is next due based on 
+ * when it was last done and the interval
+ * @param {number} currentMileage - the current mileage of the car
+ * @param {number} interval - how often the service is done (miles)
+ * @param {number} lastDone - the mileage the service was last done
+ */
+const getNextService = (currentMileage, interval, lastDone) => {
+  // If user didn't provide the last service date return the 
+  // next closest interval after current mileage. i.e. if current 
+  // mileage is 8,000 and interval is 5,000 return 10,000
+  if (!lastDone) {
+    const milesTilNext = interval - (currentMileage % interval)
+    return currentMileage + milesTilNext
+  }
+
+  // Next service is the interval since last done
+  return lastDone + interval
+}
+
+/**
+ * Based on when the car was registered and average miles driver per year,
+ * returns the estimated current mileage on the car
+ * @param {*} carMileage - the mileage of the car when it was registered
+ * @param {number} milesPerYear - miles driven in the car each year
+ * @param {*} registerDate - the date the car was registered with us
+ */
+const calculateCurrentMileage = (carMileage, milesPerYear, registerDate) => {
+  const daysSince = moment().diff(registerDate, 'days')
+  const yearsSince = daysSince / 365
+
+  return Math.round(carMileage + (milesPerYear * yearsSince))
+}
+
+
+//------ROUTES-------//
 router.post('/', auth.verifyToken, User.verify, async (req, res) => {
   try {
     const car = new Car({
@@ -37,7 +78,7 @@ router.post('/', auth.verifyToken, User.verify, async (req, res) => {
       make: req.body.make,
       model: req.body.model,
       mileage: req.body.mileage,
-      averageMPY: req.body.averageMPY,
+      averageMPY: req.body.averageMPY || 12000,
       oil: req.body.oil,
       tire: req.body.tire,
       engine: req.body.engine,
@@ -62,6 +103,7 @@ router.get('/', auth.verifyToken, User.verify, async (req, res) => {
     }).sort({
       created: -1
     });
+
     return res.send(cars);
   } catch (error) {
     console.log(error);
@@ -76,46 +118,47 @@ router.get('/:carId', auth.verifyToken, User.verify, async (req, res) => {
       _id: req.params.carId
     });
 
-    let nextOil = getNextOil(car.mileage, car.oil||0);
-    let nextTransmission = getNextTransmission(car.mileage, car.transmission||0);
-    let nextTire = getNextTire(car.mileage, car.tire||0);
-    let nextCoolant = getNextCoolant(car.mileage, car.coolant||0);
-    let nextAir = getNextFilter(car.mileage, car.engine||0);
+    const nextOil = getNextService(car.mileage, intervals.OIL, car.oil);
+    const nextTransmission = getNextService(car.mileage, intervals.TRANSMISSION,car.transmission);
+    const nextTire = getNextService(car.mileage, intervals.TIRE_ROTATION, car.tire);
+    const nextCoolant = getNextService(car.mileage, intervals.COOLANT, car.coolant);
+    const nextAir = getNextService(car.mileage, intervals.AIR_FILTER, car.engine);
 
-    car.maintenanceItems = [
+    car._doc.maintenanceItems = [
       {
         title: 'Oil Change',
-        nextOil,
+        next: nextOil,
         percent: Math.round(car.mileage / nextOil),
         color: '#ec407a'
       },
       {
         title: 'Transmission Fluid',
-        nextTransmission,
+        next: nextTransmission,
         percent: Math.round((car.mileage / nextTransmission) * 100),
         color: '#f4511e'
       },
       {
         title: 'Tire Rotation',
-        nextTire, 
+        next: nextTire, 
         percent: Math.round((car.mileage / nextTire) * 100),
         color: '#512da8'
       },
       {
         title: 'Air Filter',
-        nextAir, 
+        next: nextAir, 
         percent: Math.round((car.mileage / nextAir) * 100),
         color: '#f57c00'
       },
       {
         title: 'Coolant Flush',
-        nextCoolant, 
+        next: nextCoolant, 
         percent: Math.round((car.mileage / nextCoolant) * 100),
         color: '#0288d1'
       }
     ]
 
-    console.log(car);
+    car._doc.estimatedCurrentMileage = calculateCurrentMileage(car._doc.mileage, car._doc.averageMPY, car._doc.created)
+
     return res.send(car);
   } catch (error) {
     console.log(error);
@@ -123,70 +166,11 @@ router.get('/:carId', auth.verifyToken, User.verify, async (req, res) => {
   }
 });
 
-
 function getMessage(percent){
   if (percent > 100){
     return "Overdue!";
   }
 }
-
-function getNextOil(mileage, oil){
-
-  while (oil < mileage)
-  {
-    oil += 3000;
-  }
-  oil += 3000;
-  
-  return oil;
-}
-
-function getNextTransmission(mileage, transmission){
-  while (transmission < mileage)
-  {
-    transmission += 30000;
-  }
-  transmission += 30000;
-  return transmission;
-}
-
-function getNextTire(mileage, tire){
-  while (tire < mileage)
-  {
-    tire += 3000;
-  }
-  tire += 3000;
-
-  return tire;
-}
-
-function getNextFilter(mileage, engine){
-  while (engine < mileage)
-  {
-    engine += 15000;
-  }
-  engine += 15000;
-
-  return engine;
-}
-
-function getNextCoolant(mileage, coolant){
-  while (coolant < mileage)
-  {
-    coolant += 30000;
-  }
-  coolant += 30000;
-  return coolant;
-}
-
-skills:[
-  { lang:"Oil Change",  percent:90,    	color:"#ec407a"	},
-  { lang:"Transmission Fluid", 			percent:76,   color:"#f4511e"	},
-  { lang:"Tire Rotation", 	percent:84,   color:"#512da8"	},
-  { lang:"Air Filter",	percent:94,   color:"#f57c00"	},
-  { lang:"Coolant Flush",		 	percent:93,   color:"#0288d1"	}
-  ]
-
 module.exports = {
   model: Car,
   routes: router,

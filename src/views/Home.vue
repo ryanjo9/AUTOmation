@@ -35,7 +35,7 @@ export default {
   },
   async created() {
     await this.$store.dispatch("getUser");
-    await this.$store.dispatch('getCars')
+    await this.$store.dispatch('getCars');
   },
   methods: {
     async logout() {

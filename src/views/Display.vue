@@ -18,14 +18,6 @@
 <script>
 export default {
   name: 'Display',
-  async getData() {
-    // return axios.get('/data')
-    return {
-      make: 'Toyota',
-      model: 'Camry',
-      mileage: 25555
-    }
-  },
   computed: {
     car() {
       return this.$store.state.car;
@@ -33,7 +25,6 @@ export default {
   },
   async created() {
     await this.$store.dispatch('getCar', this.$route.params.id)
-    console.log('car: ', this.$store.state.car)
   }
 }
 </script>

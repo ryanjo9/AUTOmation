@@ -100,7 +100,7 @@ export default new Vuex.Store({
     async saveCar(context, data) {
       try {
         let response = await axios.post("/api/cars", data);
-        console.log('response: ', response)
+        console.log('saveCar response: ', response)
         // context.commit('setCar', response.data);
         return '';
       } catch (error) {
@@ -119,7 +119,6 @@ export default new Vuex.Store({
     async getCar(context, carId) {
       try {
         let response = await axios.get(`/api/cars/${carId}`);
-        console.log('getCar', response.data);
         context.commit('setCar', response.data);
         return '';
       } catch (error) {
