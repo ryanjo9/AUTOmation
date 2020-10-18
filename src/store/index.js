@@ -119,6 +119,7 @@ export default new Vuex.Store({
     async getCar(context, carId) {
       try {
         let response = await axios.get(`/api/cars/${carId}`);
+        console.log('getCar', response.data);
         context.commit('setCar', response.data);
         return '';
       } catch (error) {

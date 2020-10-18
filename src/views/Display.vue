@@ -1,12 +1,12 @@
 <template>
-  <div class="Display">
-    <p v-if='car'>{{ car.make }} {{ car.model }}</p>
+  <div class="Display" v-if='car'>
+    <p>{{ car.make }} {{ car.model }}</p>
     <div class="box">
       <ul>
-        <li v-for="skill in skills" v-bind:key='skill.color'>
-          <div class="lang">{{skill.lang}}</div>
+        <li v-for="item in car.maintenanceItems" v-bind:key='item.color'>
+          <div class="lang">{{item.title}}</div>
           <div class="bar">
-            <div class="progress" v-bind:style = "{'background':skill.color, 'width':skill.percent+'%'}"></div>
+            <div class="progress" v-bind:style = "{'background':item.color, 'width':item.percent+'%'}"></div>
             <!-- <span class="percent">{{skill.percent}}%</span> -->
           </div>
         </li>
@@ -34,28 +34,7 @@ export default {
   async created() {
     await this.$store.dispatch('getCar', this.$route.params.id)
     console.log('car: ', this.$store.state.car)
-  },
-//   computed: {
-//     oilChange() {
-//       // some calucation
-//       return 90
-//     },
-//   },
-  data() {
-    return {
-          skills:[
-          { lang:"Oil Change",  percent:90,    	color:"#ec407a"	},
-          { lang:"Transmission Fluid", 			percent:76,   color:"#f4511e"	},
-          { lang:"Tire Rotation", 	percent:84,   color:"#512da8"	},
-          { lang:"Air Filter",	percent:94,   color:"#f57c00"	},
-          { lang:"Coolant Flush",		 	percent:93,   color:"#0288d1"	}
-          ]
-    }
   }
-//   calculatePercent(current, interval, lastDone) {
-//     const milesSince = current - lastDone
-//     return milesSince / inverval * 100
-//   }
 }
 </script>
 
