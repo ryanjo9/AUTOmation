@@ -100,7 +100,7 @@ export default new Vuex.Store({
     async saveCar(context, data) {
       try {
         let response = await axios.post("/api/cars", data);
-        console.log('response: ', response)
+        console.log('saveCar response: ', response)
         // context.commit('setCar', response.data);
         return '';
       } catch (error) {
