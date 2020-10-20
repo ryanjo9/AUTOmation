@@ -7,7 +7,8 @@ const auth = require('./auth.js');
 const users = require('./users.js');
 const User = users.model;
 
-const { intervals } = require('./constants')
+const { intervals } = require('./constants');
+const e = require('express');
 
 const carSchema = new mongoose.Schema({
   user: {
@@ -21,7 +22,7 @@ const carSchema = new mongoose.Schema({
   averageMPY: Number,
   oil: Number,
   tire: Number,
-  engine: Number,
+  airFilter: Number,
   transmission: Number,
   coolant: Number,
   created: {
@@ -54,6 +55,31 @@ const getNextService = (currentMileage, interval, lastDone) => {
   return lastDone + interval
 }
 
+
+/**
+ * Returns the mileage the service is next due based on 
+ * when it was last done and the interval
+ * @param {number} percentage - the current percentage
+ */
+const getColor = (percentage) => {
+
+  if (percentage <= 20){
+    return '#36BC29'
+  }
+  else if (percentage <= 40){
+    return '#84C329'
+  }
+  else if (percentage <= 60){
+    return '#D8DC23'
+  }
+  else if (percentage <= 80){
+    return '#DC9423'
+  } 
+  else {
+    return '#DC2923'
+  }
+}
+
 /**
  * Based on when the car was registered and average miles driver per year,
  * returns the estimated current mileage on the car
@@ -81,7 +107,7 @@ router.post('/', auth.verifyToken, User.verify, async (req, res) => {
       averageMPY: req.body.averageMPY || 12000,
       oil: req.body.oil,
       tire: req.body.tire,
-      engine: req.body.engine,
+      airFilter: req.body.airFilter,
       transmission: req.body.transmission,
       coolant: req.body.coolant
     });
@@ -122,41 +148,51 @@ router.get('/:carId', auth.verifyToken, User.verify, async (req, res) => {
     const nextTransmission = getNextService(car.mileage, intervals.TRANSMISSION,car.transmission);
     const nextTire = getNextService(car.mileage, intervals.TIRE_ROTATION, car.tire);
     const nextCoolant = getNextService(car.mileage, intervals.COOLANT, car.coolant);
-    const nextAir = getNextService(car.mileage, intervals.AIR_FILTER, car.engine);
+    const nextAir = getNextService(car.mileage, intervals.AIR_FILTER, car.airFilter);
+
+    const oilColor = getColor(Math.min(Math.round((car.mileage / nextOil) * 100), 100));
+    const transmissionColor = getColor(Math.min(Math.round((car.mileage / nextTransmission) * 100), 100));
+    const tireColor = getColor(Math.min(Math.round((car.mileage / nextTire) * 100), 100));
+    const coolantColor = getColor(Math.min(Math.round((car.mileage / nextAir) * 100), 100));
+    const airColor = getColor(Math.min(Math.round((car.mileage / nextCoolant) * 100), 100));
+
 
     car._doc.maintenanceItems = [
       {
         title: 'Oil Change',
         next: nextOil,
-        percent: Math.round(car.mileage / nextOil),
-        color: '#ec407a'
+        percent: Math.min(Math.round((car.mileage / nextOil) * 100), 100),
+        color: oilColor
       },
       {
         title: 'Transmission Fluid',
         next: nextTransmission,
-        percent: Math.round((car.mileage / nextTransmission) * 100),
-        color: '#f4511e'
+        percent: Math.min(Math.round((car.mileage / nextTransmission) * 100), 100),
+        color: transmissionColor
       },
       {
         title: 'Tire Rotation',
         next: nextTire, 
-        percent: Math.round((car.mileage / nextTire) * 100),
-        color: '#512da8'
+        percent: Math.min(Math.round((car.mileage / nextTire) * 100), 100),
+        color: tireColor
       },
       {
         title: 'Air Filter',
         next: nextAir, 
-        percent: Math.round((car.mileage / nextAir) * 100),
-        color: '#f57c00'
+        percent: Math.min(Math.round((car.mileage / nextAir) * 100), 100),
+        color: coolantColor
       },
       {
         title: 'Coolant Flush',
         next: nextCoolant, 
-        percent: Math.round((car.mileage / nextCoolant) * 100),
-        color: '#0288d1'
+        percent: Math.min(Math.round((car.mileage / nextCoolant) * 100), 100),
+        color: airColor
       }
     ]
-
+    console.log(car._doc.maintenanceItems);
+    console.log(Math.round(car.mileage / nextOil));
+    console.log(nextOil);
+    console.log(car.mileage);
     car._doc.estimatedCurrentMileage = calculateCurrentMileage(car._doc.mileage, car._doc.averageMPY, car._doc.created)
 
     return res.send(car);
