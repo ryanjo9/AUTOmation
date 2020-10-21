@@ -10,6 +10,7 @@ const User = users.model;
 const { intervals } = require('./constants');
 const e = require('express');
 
+
 const carSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.ObjectId,
@@ -79,6 +80,14 @@ const getColor = (percentage) => {
     return '#DC2923'
   }
 }
+
+/*const getMessage = (percentage,  ) => {
+
+  if (percentage == 100){
+    return 'your '
+  } 
+
+}*/
 
 /**
  * Based on when the car was registered and average miles driver per year,
@@ -157,42 +166,60 @@ router.get('/:carId', auth.verifyToken, User.verify, async (req, res) => {
     const airColor = getColor(Math.min(Math.round((car.mileage / nextCoolant) * 100), 100));
 
 
+
+
     car._doc.maintenanceItems = [
       {
         title: 'Oil Change',
+        last: car.oil,
         next: nextOil,
         percent: Math.min(Math.round((car.mileage / nextOil) * 100), 100),
-        color: oilColor
+        color: oilColor,
+        logo: 'Oil_Change',
+        name: 'engine oil',
+        //message:
       },
       {
         title: 'Transmission Fluid',
+        last: car.transmission,
         next: nextTransmission,
         percent: Math.min(Math.round((car.mileage / nextTransmission) * 100), 100),
-        color: transmissionColor
+        color: transmissionColor,
+        logo: 'Transmission_Fluid',
+        name: 'transmission fluid',
+        //message:
       },
       {
         title: 'Tire Rotation',
+        last: car.tire,
         next: nextTire, 
         percent: Math.min(Math.round((car.mileage / nextTire) * 100), 100),
-        color: tireColor
+        color: tireColor,
+        logo: 'Tire_Rotation',
+        name: 'tire rotation',
+        //message:
       },
       {
         title: 'Air Filter',
+        last: car.airFilter,
         next: nextAir, 
         percent: Math.min(Math.round((car.mileage / nextAir) * 100), 100),
-        color: coolantColor
+        color: coolantColor,
+        logo: 'Air_Filter',
+        name: 'air filter',
+        //message:
       },
       {
         title: 'Coolant Flush',
+        last: car.coolant,
         next: nextCoolant, 
         percent: Math.min(Math.round((car.mileage / nextCoolant) * 100), 100),
-        color: airColor
+        color: airColor,
+        logo: 'Coolant_Flush',
+        name: 'coolant',
+        //message:
       }
     ]
-    console.log(car._doc.maintenanceItems);
-    console.log(Math.round(car.mileage / nextOil));
-    console.log(nextOil);
-    console.log(car.mileage);
     car._doc.estimatedCurrentMileage = calculateCurrentMileage(car._doc.mileage, car._doc.averageMPY, car._doc.created)
 
     return res.send(car);

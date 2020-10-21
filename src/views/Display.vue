@@ -1,18 +1,27 @@
 <template>
   <div class="Display" v-if='car'>
     <p>{{ car.make }} {{ car.model }}</p>
-    <div class="box">
+    <p>Current mileage: {{car.mileage}} miles</p>
+
       <ul>
-        <li v-for="item in car.maintenanceItems" v-bind:key='item.color'>
+        <li v-for="item in car.maintenanceItems" v-bind:key='item.title'>
+    <div class="box">
           <div class="lang">{{item.title}}</div>
-          <div class="bar">
-            <div class="progress" v-bind:style = "{'background':item.color, 'width':item.percent+'%'}"></div>
-            <!-- <span class="percent">{{skill.percent}}%</span> -->
+          <div>The last mileage when you checked {{item.name}} is: {{item.last}} miles </div>
+          <div class="grid">
+            <div class="logo">
+            <img :src="getImgUrl(item.logo)" v-bind:alt="logo" height="50px" width="50px">
+            </div>
+            <div class="bar">
+              <div class="progress" v-bind:style = "{'background':item.color, 'width':item.percent+'%'}"></div>
+              <!-- <span class="percent">{{skill.percent}}%</span> -->
+            </div>
+          </div>
           </div>
         </li>
       </ul>
+      <br><br><br><br><br>
     </div>
-  </div>
 </template>
 
 <script>
@@ -22,6 +31,14 @@ export default {
     car() {
       return this.$store.state.car;
     }
+  },
+  methods: {
+    getImgUrl(path){
+      var images = require.context('../assets/', false, /\.png$/)
+      return images('./' + path + ".png")
+    }
+
+
   },
   async created() {
     await this.$store.dispatch('getCar', this.$route.params.id)
@@ -40,10 +57,23 @@ body{
 	box-sizing:border-box;
 }
 
+.logo{
+  grid-area: side;
+  margin-top: 15px;
+}
+
+.grid{
+ display: grid;
+ grid-template-columns: auto;
+  grid-template-rows: auto;
+  grid-template-areas: 
+    "side main main main main main main main main";
+}
+
 .box{
 	width: 800px;
-	padding: 40px;
-	margin:50px auto;
+	padding: 20px;
+	margin:10px auto;
 	background:#f3f3f3;
 	box-shadow: 3px 3px 10px 3px rgba(0, 0, 0, 0.1);
 }
@@ -63,11 +93,15 @@ ul li{
 	background:#dfdfdf;
 	overflow: hidden;
 	padding:5px;
+  margin-top:20px;
+  grid-area: main;
+  height:40px;
 }
 
 .progress{
 	float:left;
 	padding:15px;
+    
 }
 
 .percent{
