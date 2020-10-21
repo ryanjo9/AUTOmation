@@ -11,9 +11,8 @@
       </ul>
     </div>
     <div v-else>
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-    <router-link to="/register" class="pure-button">Register</router-link> or
-    <router-link to="/login" class="pure-button">Login</router-link>
+      <router-link to="/register" class="pure-button">Register</router-link> or
+      <router-link to="/login" class="pure-button">Login</router-link>
     </div>
   </div>
 </template>
