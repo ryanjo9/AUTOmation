@@ -1,4 +1,22 @@
 const cars = {
+  Nissan: [
+    '350Z',
+    '370Z',
+    'Altima',
+    'GT-R',
+    'LEAF',
+    'Maxima',
+    'Sentra',
+    'Versa',
+    'Versa Note',
+    'Armada',
+    'Kicks',
+    'Murano',
+    'Pathfinder',
+    'Rogue',
+    'Rogue Hybrid',
+    'Rogue Sport',
+  ],
   Honda: [
     'HR-V',
     'CR-V',
@@ -52,6 +70,70 @@ const cars = {
     'Silverado 3500',
     'Express 2500',
     'Express 3500'
+  ],
+  Dodge: [
+    'Challenger',
+    'Charger',
+    'Durango',
+    'Journey',
+    'Grand Caravan'
+  ],
+  RAM: [
+    'RAM 1500',
+    'RAM 2500',
+    'RAM 3500',
+    'ProMaster 1500',
+    'ProMaster 2500',
+    'ProMaster 3500'
+  ],
+  Acura: [
+    'ILX',
+    'NSX',
+    'RLX',
+    'RLX Sport Hybrid',
+    'TLX',
+    'MDX',
+    'MDX Sport Hybrid',
+    'RDX'
+  ],
+  Hyundai: [
+    'Accent',
+    'Elantra',
+    'Elantra GT',
+    'Ioniq EV',
+    'Ioniq Hybrid',
+    'Sonata',
+    'Sonata Hybrid',
+    'Veloster',
+    'Veloster N',
+    'Kona',
+    'NEXO',
+    'Palisade',
+    'Santa Fe',
+    'Tucson',
+    'Venue',
+  ],
+  Toyota: [
+    '86',
+    'Avalon',
+    'Camry',
+    'Corolla',
+    'Mirai',
+    'Prius',
+    'Prius Prime',
+    'Prius C',
+    'Prius Supra',
+    'Yaris',
+    '4Runner',
+    'C-HR',
+    'Highlander',
+    'Land Cruiser',
+    'RAV4',
+    'Sequoia',
+    'Venza',
+    'Tacoma',
+    'Tundra',
+    'Sienna'
   ]
 }
 

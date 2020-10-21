@@ -5,18 +5,21 @@
 
       <ul>
         <li v-for="item in car.maintenanceItems" v-bind:key='item.title'>
-    <div class="box">
-          <div class="lang">{{item.title}}</div>
-          <div>The last mileage when you checked {{item.name}} is: {{item.last}} miles </div>
-          <div class="grid">
-            <div class="logo">
-            <img :src="getImgUrl(item.logo)" v-bind:alt="logo" height="50px" width="50px">
+          <div class="box">
+            <div class="lang">
+              <a v-bind:href="'https://www.google.com/maps/search/'+ item.title.replace(' ', '%20')">
+                {{item.title}}
+              </a>
             </div>
-            <div class="bar">
-              <div class="progress" v-bind:style = "{'background':item.color, 'width':item.percent+'%'}"></div>
-              <!-- <span class="percent">{{skill.percent}}%</span> -->
+            <div>The last mileage when you checked {{item.name}} is: {{item.last}} miles </div>
+            <div class="grid">
+              <div class="logo">
+                <img :src="getImgUrl(item.logo)" height="50px" width="50px">
+              </div>
+              <div class="bar">
+                <div class="progress" v-bind:style = "{'background':item.color, 'width':item.percent+'%'}"></div>
+              </div>
             </div>
-          </div>
           </div>
         </li>
       </ul>

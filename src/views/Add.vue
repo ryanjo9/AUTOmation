@@ -1,11 +1,13 @@
 <template>
-  <div v-if="step==0">
-    <CarTypeInput v-on:cancel="cancel" v-on:CarTypeInputFinish="typeInputFinish"/>
-  </div>
-  <div v-else-if="step==1">
-    <CarHistoryInput v-on:cancel="cancel" v-on:CarHistoryInputFinish="historyInputFinish"/>
-    <div v-if="err">
-      <p>Something went wrong. Please try again</p>
+  <div class="add">
+    <div v-if="step==0">
+      <CarTypeInput v-on:cancel="cancel" v-on:CarTypeInputFinish="typeInputFinish"/>
+    </div>
+    <div v-else-if="step==1">
+      <CarHistoryInput v-on:cancel="cancel" v-on:CarHistoryInputFinish="historyInputFinish"/>
+      <div v-if="err">
+        <p>Something went wrong. Please try again</p>
+      </div>
     </div>
   </div>
 </template>
@@ -64,6 +66,10 @@ export default {
 .select-style .vs_dropdown-menu,
 .select-style {
   width: 300px;
+}
+
+.add{
+  margin-top: 15px;
 }
 
 button{
