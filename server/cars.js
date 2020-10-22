@@ -37,15 +37,15 @@ const Car = mongoose.model('Car', carSchema);
 
 //--------HELPER FUNCIONS--------//
 /**
- * Returns the mileage the service is next due based on 
+ * Returns the mileage the service is next due based on
  * when it was last done and the interval
  * @param {number} currentMileage - the current mileage of the car
  * @param {number} interval - how often the service is done (miles)
  * @param {number} lastDone - the mileage the service was last done
  */
 const getNextService = (currentMileage, interval, lastDone) => {
-  // If user didn't provide the last service date return the 
-  // next closest interval after current mileage. i.e. if current 
+  // If user didn't provide the last service date return the
+  // next closest interval after current mileage. i.e. if current
   // mileage is 8,000 and interval is 5,000 return 10,000
   if (!lastDone) {
     const milesTilNext = interval - (currentMileage % interval)
@@ -58,7 +58,7 @@ const getNextService = (currentMileage, interval, lastDone) => {
 
 
 /**
- * Returns the mileage the service is next due based on 
+ * Returns the mileage the service is next due based on
  * when it was last done and the interval
  * @param {number} percentage - the current percentage
  */
@@ -75,7 +75,7 @@ const getColor = (percentage) => {
   }
   else if (percentage <= 80){
     return '#DC9423'
-  } 
+  }
   else {
     return '#DC2923'
   }
@@ -85,7 +85,7 @@ const getColor = (percentage) => {
 
   if (percentage == 100){
     return 'your '
-  } 
+  }
 
 }*/
 
@@ -192,7 +192,7 @@ router.get('/:carId', auth.verifyToken, User.verify, async (req, res) => {
       {
         title: 'Tire Rotation',
         last: car.tire,
-        next: nextTire, 
+        next: nextTire,
         percent: Math.min(Math.round((car.mileage / nextTire) * 100), 100),
         color: tireColor,
         logo: 'Tire_Rotation',
@@ -202,7 +202,7 @@ router.get('/:carId', auth.verifyToken, User.verify, async (req, res) => {
       {
         title: 'Air Filter',
         last: car.airFilter,
-        next: nextAir, 
+        next: nextAir,
         percent: Math.min(Math.round((car.mileage / nextAir) * 100), 100),
         color: coolantColor,
         logo: 'Air_Filter',
@@ -212,7 +212,7 @@ router.get('/:carId', auth.verifyToken, User.verify, async (req, res) => {
       {
         title: 'Coolant Flush',
         last: car.coolant,
-        next: nextCoolant, 
+        next: nextCoolant,
         percent: Math.min(Math.round((car.mileage / nextCoolant) * 100), 100),
         color: airColor,
         logo: 'Coolant_Flush',
@@ -227,6 +227,16 @@ router.get('/:carId', auth.verifyToken, User.verify, async (req, res) => {
     console.log(error);
     return res.sendStatus(500);
   }
+});
+
+// remove a car
+router.delete("/:carId", auth.verifyToken, User.verify, async (req, res) => {
+  try {
+		await Car.deleteOne({ _id: req.param("carId") });
+	} catch (error) {
+		console.log(error);
+		res.sendStatus(500);
+	}
 });
 
 function getMessage(percent){
