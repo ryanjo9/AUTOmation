@@ -81,13 +81,19 @@ const getColor = (percentage) => {
   }
 }
 
-/*const getMessage = (percentage,  ) => {
+const getMessage = (percentage, next, name) => {
 
   if (percentage == 100){
-    return 'your '
+    return 'Your ' + name + ' is overdue!\n' + 'Your ' + name + ' was supposed to be checked at: ' + next + ' miles';
+  } 
+  else if (percentage > 80){
+    return 'Your ' + name + ' needs to be checked soon.\n' + 'Your next ' + name + ' change is: ' + next + ' miles'; 
+  }
+  else {
+    return 'Your next ' + name + ' change is: ' + next + ' miles';
   }
 
-}*/
+}
 
 /**
  * Based on when the car was registered and average miles driver per year,
@@ -165,8 +171,11 @@ router.get('/:carId', auth.verifyToken, User.verify, async (req, res) => {
     const coolantColor = getColor(Math.min(Math.round((car.mileage / nextAir) * 100), 100));
     const airColor = getColor(Math.min(Math.round((car.mileage / nextCoolant) * 100), 100));
 
-
-
+    const oilMessage = getMessage(Math.min(Math.round((car.mileage / nextOil) * 100), 100), nextOil, 'oil change');
+    const transmissionMessage = getMessage(Math.min(Math.round((car.mileage / nextTransmission) * 100), 100), nextTransmission, 'transmission fluid');
+    const tireMessage = getMessage(Math.min(Math.round((car.mileage / nextTire) * 100), 100), nextTire, 'tire rotation');
+    const coolantMessage = getMessage(Math.min(Math.round((car.mileage / nextCoolant) * 100), 100), nextCoolant, 'coolant fluid');
+    const airMessage = getMessage(Math.min(Math.round((car.mileage / nextAir) * 100), 100), nextAir, 'air filter');
 
     car._doc.maintenanceItems = [
       {
@@ -177,7 +186,7 @@ router.get('/:carId', auth.verifyToken, User.verify, async (req, res) => {
         color: oilColor,
         logo: 'Oil_Change',
         name: 'engine oil',
-        //message:
+        message: oilMessage
       },
       {
         title: 'Transmission Fluid',
@@ -187,7 +196,7 @@ router.get('/:carId', auth.verifyToken, User.verify, async (req, res) => {
         color: transmissionColor,
         logo: 'Transmission_Fluid',
         name: 'transmission fluid',
-        //message:
+        message: transmissionMessage 
       },
       {
         title: 'Tire Rotation',
@@ -197,7 +206,7 @@ router.get('/:carId', auth.verifyToken, User.verify, async (req, res) => {
         color: tireColor,
         logo: 'Tire_Rotation',
         name: 'tire rotation',
-        //message:
+        message: tireMessage
       },
       {
         title: 'Air Filter',
@@ -207,7 +216,7 @@ router.get('/:carId', auth.verifyToken, User.verify, async (req, res) => {
         color: coolantColor,
         logo: 'Air_Filter',
         name: 'air filter',
-        //message:
+        message: airMessage
       },
       {
         title: 'Coolant Flush',
@@ -217,7 +226,7 @@ router.get('/:carId', auth.verifyToken, User.verify, async (req, res) => {
         color: airColor,
         logo: 'Coolant_Flush',
         name: 'coolant',
-        //message:
+        message: coolantMessage
       }
     ]
     car._doc.estimatedCurrentMileage = calculateCurrentMileage(car._doc.mileage, car._doc.averageMPY, car._doc.created)
@@ -239,11 +248,6 @@ router.delete("/:carId", auth.verifyToken, User.verify, async (req, res) => {
 	}
 });
 
-function getMessage(percent){
-  if (percent > 100){
-    return "Overdue!";
-  }
-}
 module.exports = {
   model: Car,
   routes: router,

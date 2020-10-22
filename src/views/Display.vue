@@ -20,6 +20,7 @@
                 <div class="progress" v-bind:style = "{'background':item.color, 'width':item.percent+'%'}"></div>
               </div>
             </div>
+            <div class ="message">{{item.message}}</div>
           </div>
         </li>
       </ul>
@@ -63,6 +64,10 @@ body{
 .logo{
   grid-area: side;
   margin-top: 15px;
+}
+
+.message{
+  margin-top: 20px;
 }
 
 .grid{
