@@ -14,21 +14,50 @@
             <li class="nav-item active">
               <router-link style="color:white" class="nav-link" to="/">Home</router-link>
             </li>
-            <li class="nav-item">
-              <router-link style="color:white" class="nav-link" to="/add">Add</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link style="color:white" class="nav-link" to="/login">Login </router-link>
-            </li>
-            <li class="nav-item">
-              <router-link style="color:white" class="nav-link" to="/register">Register </router-link>
-            </li>
+            <div v-if="user" style="display:flex">
+              <li class="nav-item">
+                <router-link style="color:white" class="nav-link" to="/add">Add</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link style="color:white" class="nav-link" to="/" @click.native="logout">Logout</router-link>
+              </li>
+            </div>
+            <div v-else style="display:flex">
+              <li class="nav-item">
+                <router-link style="color:white" class="nav-link" to="/register">Register</router-link>
+              </li>
+            </div>
           </ul>
         </div>
       </nav>
       <router-view/>
   </div>
 </template>
+
+<script>
+export default {
+  name: 'App',
+  components: {
+  },
+  computed: {
+    user() {
+      return this.$store.state.user;
+    }
+  },
+  async created() {
+    await this.$store.dispatch("getUser");
+  },
+  methods: {
+    async logout() {
+      try {
+        this.error = await this.$store.dispatch("logout");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+}
+</script>
 
 <style>
 #app {
@@ -38,17 +67,25 @@
   text-align: center;
   color: #2c3e50;
 }
-
 #nav {
   padding: 30px;
 }
-
 #nav a {
   font-weight: bold;
   color: #2c3e50;
 }
-
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+#nav-condition {
+  display: inline-block;
+  width: 1000px;
+}
+button {
+  background-color: lightblue;
+  border-radius: 13px !IMPORTANT;
+}
+button:hover {
+  background-color: #0277BD;
 }
 </style>

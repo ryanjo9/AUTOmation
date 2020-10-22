@@ -74,7 +74,7 @@ export default new Vuex.Store({
         const data = {
           makes: Object.keys(cars)
         }
-        
+
         context.commit('setMakes', data.makes.sort());
 
         return ''; // returning an empty string since my old code relied on empty strings for error handling
@@ -102,6 +102,14 @@ export default new Vuex.Store({
         let response = await axios.post("/api/cars", data);
         console.log('saveCar response: ', response)
         // context.commit('setCar', response.data);
+        return '';
+      } catch (error) {
+        return error.message;
+      }
+    },
+    async removeCar(context, carId) {
+      try {
+        await axios.delete(`/api/cars/${carId}`);
         return '';
       } catch (error) {
         return error.message;

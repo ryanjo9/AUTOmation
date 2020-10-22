@@ -19,8 +19,9 @@
         <button type="submit" class="pure-button pure-button-primary">Submit</button>
       </div>
     </fieldset>
+    or <router-link to="/register" class="pure-button">Register</router-link>
+    <p v-if="error" class="error">{{error}}</p>
   </form>
-  <p v-if="error" class="error">{{error}}</p>
 </div>
 </template>
 
@@ -57,6 +58,9 @@ form {
   background-color: #eee;
   border-radius: 4px;
   padding: 20px;
+  position: absolute;
+  left: 25%;
+  width: 50%;
 }
 .pure-controls {
   display: flex;

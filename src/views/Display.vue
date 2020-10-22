@@ -69,7 +69,7 @@ body{
  display: grid;
  grid-template-columns: auto;
   grid-template-rows: auto;
-  grid-template-areas: 
+  grid-template-areas:
     "side main main main main main main main main";
 }
 
@@ -104,7 +104,7 @@ ul li{
 .progress{
 	float:left;
 	padding:15px;
-    
+
 }
 
 .percent{

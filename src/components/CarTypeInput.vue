@@ -20,7 +20,7 @@
         <label>Mileage</label>
       </div>
     </form>
-    <button type="submit" class="btn btn-outline-warning" @click="next">Next</button> 
+    <button type="submit" class="btn btn-outline-warning" @click="next">Next</button>
     <button type="submit" v-on:click="cancel" class="btn btn-outline-secondary">Cancel</button>
     <br/>
     <br/>
@@ -111,9 +111,9 @@ button{
 }
 
 /* form starting stylings ------------------------------- */
-  .group            { 
-    position:relative; 
-    margin-bottom:45px; 
+  .group            {
+    position:relative;
+    margin-bottom:45px;
     width: 100%;
     left: 25%;
     margin-left: 30px;
@@ -130,15 +130,15 @@ button{
 
   /* LABEL ======================================= */
   label                {
-    color:#999; 
+    color:#999;
     font-size:18px;
     font-weight:normal;
     position:absolute;
     pointer-events:none;
     left:5px;
     top:10px;
-    transition:0.2s ease all; 
-    -moz-transition:0.2s ease all; 
+    transition:0.2s ease all;
+    -moz-transition:0.2s ease all;
     -webkit-transition:0.2s ease all;
   }
 
@@ -153,20 +153,20 @@ button{
   .bar    { position:relative; display:block; width:300px; }
   .bar:before, .bar:after     {
     content:'';
-    height:2px; 
+    height:2px;
     width:0;
-    bottom:1px; 
+    bottom:1px;
     position:absolute;
-    background:#5264AE; 
-    transition:0.2s ease all; 
-    -moz-transition:0.2s ease all; 
+    background:#5264AE;
+    transition:0.2s ease all;
+    -moz-transition:0.2s ease all;
     -webkit-transition:0.2s ease all;
   }
   .bar:before {
     left:50%;
   }
   .bar:after {
-    right:50%; 
+    right:50%;
   }
 
   /* active state */
@@ -177,9 +177,9 @@ button{
   /* HIGHLIGHTER ================================== */
   .highlight {
     position:absolute;
-    height:60%; 
-    width:100px; 
-    top:25%; 
+    height:60%;
+    width:100px;
+    top:25%;
     left:0;
     pointer-events:none;
     opacity:0.5;

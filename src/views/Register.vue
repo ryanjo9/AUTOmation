@@ -64,6 +64,9 @@ form {
   background-color: #eee;
   border-radius: 4px;
   padding: 20px;
+  position: absolute;
+  left: 25%;
+  width: 50%;
 }
 .pure-controls {
   display: flex;

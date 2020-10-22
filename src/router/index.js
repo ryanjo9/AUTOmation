@@ -42,7 +42,7 @@ const routes = [
     name: 'Register',
     component: Register
   }
-  
+
 ]
 
 const router = new VueRouter({
