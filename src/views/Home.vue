@@ -4,19 +4,21 @@
     <div v-if="user">
 
       <h1 style="margin-top: 50px; margin-bottom: 50px">Hello {{user.name}}</h1>
-      <div v-if="cars.length === 0">
-        <router-link style="color:black; display:inline-block" class="nav-link" to="/add" id="add_car">Add a Car</router-link>
-      </div>
+      <router-link style="color:black; display:inline-block" class="nav-link" to="/add" id="add_car">Add a Car</router-link>
 
-      <div v-for="(car, index) in cars" v-bind:key='car._id' class="car_info">
-        <router-link :to="{ name: 'Display', params: {id: car._id} }" class="car_links">
-          <div class="logo" style="display: inline-block">
-            <img :src="getImgUrl('car')" height="40px" width="100px">
+      <ul>
+        <li v-for="(car, index) in cars" v-bind:key='car._id' class="car_info">
+          <div class = "car_info">
+            <router-link :to="{ name: 'Display', params: {id: car._id} }" class="car_links">
+              <div class="logo" style="display: inline-block">
+                <img :src="getImgUrl('car')" height="40px" width="100px">
+              </div>
+              <p style="display: inline-block; margin-right: 50px">{{ car.year }} {{ car.make }} {{ car.model }}</p>
+            </router-link>
+            <button class="remove_car" @click="removeCar(car._id, index)">Remove</button>
           </div>
-          <p style="display: inline-block; margin-right: 50px">{{ car.year }} {{ car.make }} {{ car.model }}</p>
-        </router-link>
-        <button class="remove_car" @click="removeCar(car._id, index)">Remove</button>
-      </div>
+        </li>
+      </ul>
 
     </div>
     <div v-else>
@@ -64,10 +66,17 @@ export default {
 
 <style>
 .car_info {
-  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  position: auto;
   left: 25%;
   width: 50%;
 }
+
+ul {
+    list-style-type: none;
+}
+
 .logo{
   grid-area: side;
   margin-top: 15px;
