@@ -229,6 +229,16 @@ router.get('/:carId', auth.verifyToken, User.verify, async (req, res) => {
   }
 });
 
+// remove a car
+router.delete("/:carId", auth.verifyToken, User.verify, async (req, res) => {
+  try {
+		await Car.deleteOne({ _id: req.param("carId") });
+	} catch (error) {
+		console.log(error);
+		res.sendStatus(500);
+	}
+});
+
 function getMessage(percent){
   if (percent > 100){
     return "Overdue!";

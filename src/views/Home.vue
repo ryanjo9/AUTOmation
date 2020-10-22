@@ -2,27 +2,36 @@
   <div class="home">
     
     <div v-if="user">
-      <h1>Hello {{user.name}}</h1>
-      <a href="#" @click="logout">Logout</a>
-      <ul>
-        <li v-for="car in cars" v-bind:key='car._id'>
-          <router-link :to="{ name: 'Display', params: {id: car._id} }">{{ car.year }} {{ car.make }} {{ car.model }}</router-link>
-        </li>
-      </ul>
+
+      <h1 style="margin-top: 50px; margin-bottom: 50px">Hello {{user.name}}</h1>
+      <div v-if="cars.length === 0">
+        <router-link style="color:black; display:inline-block" class="nav-link" to="/add" id="add_car">Add a Car</router-link>
+      </div>
+
+      <div v-for="(car, index) in cars" v-bind:key='car._id' class="car_info">
+        <router-link :to="{ name: 'Display', params: {id: car._id} }" class="car_links">
+          <div class="logo" style="display: inline-block">
+            <img :src="getImgUrl('car')" height="40px" width="100px">
+          </div>
+          <p style="display: inline-block; margin-right: 50px">{{ car.year }} {{ car.make }} {{ car.model }}</p>
+        </router-link>
+        <button class="remove_car" @click="removeCar(car._id, index)">Remove</button>
+      </div>
+
     </div>
     <div v-else>
-      <router-link to="/register" class="pure-button">Register</router-link> or
-      <router-link to="/login" class="pure-button">Login</router-link>
+      <login />
     </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
+import Login from '@/views/Login.vue'
 
 export default {
   name: 'Home',
   components: {
+    Login
   },
   computed: {
     user() {
@@ -37,9 +46,14 @@ export default {
     await this.$store.dispatch('getCars');
   },
   methods: {
-    async logout() {
+    getImgUrl(path){
+      var images = require.context('../assets/', false, /\.png$/)
+      return images('./' + path + ".png")
+    },
+    async removeCar(carId, index) {
       try {
-        this.error = await this.$store.dispatch("logout");
+        this.cars.splice(index, 1);
+        this.error = await this.$store.dispatch("removeCar", carId);
       } catch (error) {
         console.log(error);
       }
@@ -47,3 +61,35 @@ export default {
   }
 }
 </script>
+
+<style>
+.car_info {
+  position: absolute;
+  left: 25%;
+  width: 50%;
+}
+.logo{
+  grid-area: side;
+  margin-top: 15px;
+  margin-right: 20px;
+}
+.remove_car {
+  background-color: pink;
+  border-radius: 13px !IMPORTANT;
+}
+.remove_car:hover {
+  background-color: red;
+  font-weight: bold;
+}
+#add_car {
+  background-color: lightgreen;
+  border: 1px solid black;
+  border-radius: 20px;
+}
+.car_links {
+  color: black !IMPORTANT;
+}
+.car_links:hover {
+  font-weight: bold;
+}
+</style>

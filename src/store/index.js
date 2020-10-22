@@ -107,6 +107,14 @@ export default new Vuex.Store({
         return error.message;
       }
     },
+    async removeCar(context, carId) {
+      try {
+        await axios.delete(`/api/cars/${carId}`);
+        return '';
+      } catch (error) {
+        return error.message;
+      }
+    },
     async getCars(context) {
       try {
         let response = await axios.get("/api/cars");
